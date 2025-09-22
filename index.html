@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Resume Builder | Create a Professional PDF Resume</title>
+    <meta name="description" content="Create a professional, customizable resume for free. Download your resume as a PDF instantly. No sign-up required.">
+    
+    <!-- Link to our main application stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- This link tag is our dynamic template switcher. We change its 'href' with JavaScript. It starts with the first template. -->
+    <link rel="stylesheet" href="templates/template-1.css" id="resume-template">
+    
+    <!-- We will load these JS libraries from a public CDN (free) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <header class="app-header">
+        <h1>Free Resume Builder</h1>
+        <p>Fill out the form and watch your resume come to life. Download your perfect PDF resume in seconds.</p>
+    </header>
+
+    <main class="app-container">
+        <!-- LEFT COLUMN: INPUT FORM -->
+        <section class="form-column">
+            <form id="resume-form">
+                <h2>Build Your Resume</h2>
+                <p>Start by filling out your information below.</p>
+        
+                <!-- PERSONAL INFORMATION SECTION -->
+                <fieldset class="form-section">
+                    <legend>Personal Information</legend>
+                    
+                    <label for="input-name">Full Name *</label>
+                    <input type="text" id="input-name" name="name" required placeholder="e.g., Jane Doe">
+                    
+                    <label for="input-email">Email *</label>
+                    <input type="email" id="input-email" name="email" required placeholder="e.g., jane.doe@email.com">
+                    
+                    <label for="input-phone">Phone Number</label>
+                    <input type="tel" id="input-phone" name="phone" placeholder="e.g., (555) 123-4567">
+                    
+                    <label for="input-location">Location (City, Country)</label>
+                    <input type="text" id="input-location" name="location" placeholder="e.g., Toronto, Canada">
+                    
+                    <label for="input-linkedin">LinkedIn Profile URL</label>
+                    <input type="url" id="input-linkedin" name="linkedin" placeholder="e.g., linkedin.com/in/janedoe">
+                </fieldset>
+        
+                <!-- PROFESSIONAL SUMMARY SECTION -->
+                <fieldset class="form-section">
+                    <legend>Professional Summary</legend>
+                    <label for="input-summary">Write a brief summary of your professional background and goals (2-4 sentences).</label>
+                    <textarea id="input-summary" name="summary" rows="4" placeholder="A motivated and detail-oriented marketing professional with 5 years of experience in..."></textarea>
+                </fieldset>
+        
+                <!-- SKILLS SECTION -->
+                <fieldset class="form-section">
+                    <legend>Skills</legend>
+                    <label for="input-skills">List your skills, separated by commas.</label>
+                    <input type="text" id="input-skills" name="skills" placeholder="e.g., Project Management, SEO, Python, Public Speaking">
+                </fieldset>
+        
+                <!-- WORK EXPERIENCE SECTION -->
+                <fieldset class="form-section">
+                    <legend>Work Experience</legend>
+                    <p>Add your previous jobs and responsibilities.</p>
+                    
+                    <!-- Container where dynamic experience forms will be added -->
+                    <div id="experience-container">
+                        <!-- The first experience form will be added here by JavaScript -->
+                    </div>
+                    
+                    <!-- Button to add a new experience form -->
+                    <button type="button" id="add-experience" class="add-button">+ Add Another Experience</button>
+                </fieldset>
+
+                <!-- EDUCATION SECTION -->
+                <fieldset class="form-section">
+                    <legend>Education</legend>
+                    <p>Add your educational background.</p>
+                    
+                    <!-- Container where dynamic education forms will be added -->
+                    <div id="education-container">
+                        <!-- The first education form will be added here by JavaScript -->
+                    </div>
+                    
+                    <!-- Button to add a new education form -->
+                    <button type="button" id="add-education" class="add-button">+ Add Another Education</button>
+                </fieldset>
+                
+            </form>
+        </section>
+
+        <!-- RIGHT COLUMN: PREVIEW & TEMPLATE SELECTOR -->
+        <section class="preview-column">
+            <!-- TEMPLATE SELECTOR BAR -->
+            <div class="template-selector">
+                <h3>Choose a Template:</h3>
+                <div class="template-buttons">
+                    <!-- Buttons to let users switch templates. The 'data-template' attribute tells JS which CSS file to load. -->
+                    <button type="button" class="template-btn active" data-template="template-1">1</button>
+                    <button type="button" class="template-btn" data-template="template-2">2</button>
+                    <button type="button" class="template-btn" data-template="template-3">3</button>
+                    <button type="button" class="template-btn" data-template="template-4">4</button>
+                    <button type="button" class="template-btn" data-template="template-5">5</button>
+                </div>
+                <!-- The PDF Download Button -->
+                <button id="download-pdf">Download PDF</button>
+            </div>
+
+            <!-- RESUME PREVIEW AREA -->
+            <div class="resume-preview">
+                <!-- This div is the container that html2pdf.js will convert to a PDF. -->
+                <div id="resume-to-export">
+                    <!-- The content of this div will be dynamically populated by JavaScript based on the form input. -->
+                    <!-- We will add the structure (like your name, summary, etc.) in the next step. -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- LOADING OVERLAY (initially hidden) -->
+    <div id="loading-overlay" class="loading-hidden">
+        <div class="loading-spinner"></div>
+        <p>Loading Template...</p>
+    </div>
+
+    <!-- Link to our own JavaScript file. It's at the bottom of the body so the HTML loads first. -->
+    <script src="script.js"></script>
+</body>
+</html>

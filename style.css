@@ -1,0 +1,396 @@
+/* style.css */
+/* This file styles the Resume Builder application itself, not the resume templates. */
+
+/* 1. GLOBAL STYLES & CSS RESET */
+/* This removes default margins, paddings, and ensures border-box sizing for easier layout calculations. */
+*, *::before, *::after {
+    box-sizing: border-box; /* Width and height include padding and border */
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    /* CSS Variables for consistent colors and spacing */
+    --color-primary: #2563eb;   /* A nice blue for main actions */
+    --color-primary-hover: #1d4ed8;
+    --color-light: #f3f4f6;     /* Light gray for backgrounds */
+    --color-dark: #1f2937;      /* Dark gray for text */
+    --color-border: #d1d5db;    /* Gray for borders */
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* A subtle shadow */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; /* Modern, clean font stack */
+    line-height: 1.6;
+    color: var(--color-dark);
+    background-color: #f9fafb; /* A very light gray for the page background */
+    padding-bottom: 2rem; /* Add some space at the bottom of the page */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
+
+/* 2. APP HEADER */
+.app-header {
+    text-align: center;
+    padding: 2rem 1rem; /* Spacing inside the header */
+    background-color: white;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem; /* Space between header and main content */
+}
+
+.app-header h1 {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+.app-header p {
+    color: var(--color-dark);
+    max-width: 600px;
+    margin: 0 auto; /* This centers the paragraph */
+}
+
+/* 3. MAIN TWO-COLUMN LAYOUT */
+.app-container {
+    display: flex; /* This creates the side-by-side columns */
+    gap: 2rem; /* This adds space between the two columns */
+    max-width: 1600px; /* Maximum width of the whole app */
+    margin: 0 auto; /* Center the app container on the page */
+    padding: 0 1rem; /* Add some padding on the left/right on small screens */
+}
+
+/* 4. LEFT COLUMN - FORM */
+.form-column {
+    flex: 1; /* This allows the column to grow and fill available space */
+    min-width: 350px; /* Prevents it from getting too narrow */
+    height: fit-content; /* Height is defined by its content */
+    position: sticky; /* Makes the form stick to the top as you scroll */
+    top: 1rem; /* How far from the top of the viewport it sticks */
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+#resume-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Adds consistent space between form sections */
+}
+
+/* 5. RIGHT COLUMN - PREVIEW */
+.preview-column {
+    flex: 2; /* This makes the preview column wider than the form column (2:1 ratio) */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Space between template bar and preview */
+}
+
+/* 6. TEMPLATE SELECTOR BAR */
+.template-selector {
+    display: flex;
+    justify-content: space-between; /* Puts buttons on the left and download on the right */
+    align-items: center;
+    flex-wrap: wrap; /* Allows items to wrap on small screens */
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.template-buttons {
+    display: flex;
+    gap: 0.5rem; /* Space between the template number buttons */
+}
+
+.template-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border);
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease; /* Smooth transition for hover effects */
+}
+
+.template-btn:hover {
+    background: var(--color-light);
+}
+
+.template-btn.active {
+    /* Styles for the currently selected template button */
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+#download-pdf {
+    padding: 0.75rem 1.5rem;
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+#download-pdf:hover {
+    background: var(--color-primary-hover);
+}
+
+/* 7. RESUME PREVIEW CONTAINER */
+.resume-preview {
+    /* This container holds the actual resume and provides a "page" feel */
+    min-height: 600px;
+    background-color: white;
+    box-shadow: var(--shadow);
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align resume to the top */
+    overflow-y: auto; /* Adds a scrollbar if the resume content is too tall */
+}
+
+#resume-to-export {
+    /* This is the div that will be converted to PDF. It mimics an A4 page. */
+    width: 210mm; /* Standard A4 width */
+    min-height: 297mm; /* Standard A4 height */
+    padding: 15mm; /* Page margins */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* A subtle shadow inside the preview */
+    background-color: white; /* Essential for PDF background */
+    margin: 0 auto; /* Center it */
+    overflow-x: hidden; /* Prevent any horizontal overflow */
+    box-sizing: border-box;
+}
+
+#resume-to-export * {
+    box-sizing: inherit;
+}
+
+/* 8. LOADING OVERLAY */
+#loading-overlay {
+    /* This will cover the entire screen when a template is loading */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Puts it on top of everything else */
+    font-size: 1.5rem;
+    font-weight: bold;
+    backdrop-filter: blur(5px);
+    flex-direction: column;
+    transition: opacity 0.3s ease;
+}
+
+#loading-overlay p {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: var(--color-primary);
+}
+
+/* Loading spinner */
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-hidden {
+    /* Utility class to hide the overlay */
+    display: none !important; /* '!important' ensures this overrides other display values */
+}
+
+/* 9. RESPONSIVE DESIGN FOR MOBILE */
+@media (max-width: 900px) {
+    .app-container {
+        flex-direction: column; /* Stacks columns on top of each other on small screens */
+    }
+    
+    .form-column {
+        position: static; /* Disables sticky positioning on mobile */
+        min-width: auto;
+    }
+    
+    .template-selector {
+        flex-direction: column; /* Stacks template buttons and download button */
+        align-items: stretch;
+    }
+    
+    .template-buttons {
+        justify-content: center; /* Centers the template buttons */
+    }
+    
+    #resume-to-export {
+        width: 100%; /* Makes the resume preview full width on mobile */
+        min-height: 400px; /* Reduces height on mobile */
+    }
+}
+
+/* 10. FORM STYLES */
+.form-section {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.form-section legend {
+    font-weight: bold;
+    padding: 0 0.5rem;
+    color: var(--color-primary);
+}
+
+#resume-form label {
+    display: block; /* Puts the label on its own line */
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-dark);
+}
+
+#resume-form label:first-of-type {
+    margin-top: 0; /* Removes extra top margin for the first label in a section */
+}
+
+#resume-form input[type="text"],
+#resume-form input[type="email"],
+#resume-form input[type="tel"],
+#resume-form input[type="url"],
+#resume-form textarea {
+    width: 100%; /* Makes the input field fill its container */
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-family: inherit; /* Uses the same font as the rest of the app */
+    font-size: 1rem;
+}
+
+#resume-form input:focus,
+#resume-form textarea:focus {
+    /* Adds a highlight when user clicks into a field */
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); /* A subtle blue glow */
+}
+
+/* 11. DYNAMIC SECTION STYLES */
+.dynamic-item {
+    background-color: var(--color-light);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative; /* Needed for positioning the remove button */
+}
+
+.remove-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: #ef4444; /* A red color for delete */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-btn:hover {
+    background: #dc2626; /* A darker red on hover */
+}
+
+.add-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #f1f5f9; /* A light gray */
+    color: var(--color-dark);
+    border: 1px dashed var(--color-border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.add-button:hover {
+    background-color: #e2e8f0; /* A slightly darker gray on hover */
+}
+
+/* 12. PDF DOWNLOAD FEEDBACK */
+
+#download-pdf:disabled {
+    background-color: #9ca3af; /* Gray out when disabled */
+    cursor: not-allowed;
+}
+
+#download-pdf.generating {
+    /* Optional: Add a pulsing animation during generation */
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Success message styling */
+.download-success {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #10b981; /* Green */
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    z-index: 1000;
+    animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Print-specific styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #resume-to-export, #resume-to-export * {
+        visibility: visible;
+    }
+    #resume-to-export {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 15mm;
+        box-shadow: none;
+    }
+}

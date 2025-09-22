@@ -1,0 +1,80 @@
+/* templates/template-5.css */
+/* Clean Two-Column Template */
+
+#resume-to-export {
+    font-family: "Arial", "Helvetica", sans-serif;
+    color: #333;
+    line-height: 1.5;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+}
+
+#resume-to-export .resume-header {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #4299e1;
+}
+
+#resume-to-export .resume-name {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4299e1;
+    margin-bottom: 0.5rem;
+}
+
+#resume-to-export .resume-contact {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    color: #666;
+}
+
+#resume-to-export .resume-section:nth-child(2) {
+    grid-column: 1 / -1;
+}
+
+#resume-to-export .resume-section:nth-child(3),
+#resume-to-export .resume-section:nth-child(4) {
+    grid-column: 2 / 3;
+}
+
+#resume-to-export .resume-section:nth-child(5),
+#resume-to-export .resume-section:nth-child(6) {
+    grid-column: 1 / 2;
+    grid-row: 3 / 5;
+}
+
+#resume-to-export .section-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4299e1;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.25rem;
+    margin-bottom: 0.75rem;
+}
+
+#resume-to-export .item-header {
+    color: #333;
+}
+
+#resume-to-export .item-subheader {
+    color: #666;
+}
+
+#resume-to-export .resume-list li::before {
+    color: #4299e1;
+}
+
+#resume-to-export .skills-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+#resume-to-export .skills-container li {
+    background: #ebf8ff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+}
