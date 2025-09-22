@@ -517,15 +517,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 15. CREATE BASIC TEMPLATE FILES
-    // Since we only have template-1.css, let's create minimal versions of the other templates
-    // Users can customize these later
-
-    // Note: We'll create template-2.css to template-5.css with basic variations
-    // For now, they can just be copies of template-1.css with different colors
-
-    // More event listeners will be added here for email, summary, etc.
-
-    // ... (We will add code for template switching and PDF download here next)
-
 });
