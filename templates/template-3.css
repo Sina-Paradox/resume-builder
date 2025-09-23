@@ -4,7 +4,8 @@
 #resume-to-export {
     font-family: "Georgia", "Times New Roman", serif;
     color: #333;
-    line-height: 1.5;
+    line-height: 1.4;
+    width: 100%;
 }
 
 #resume-to-export .resume-header {
