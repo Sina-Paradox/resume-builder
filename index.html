@@ -48,8 +48,12 @@
         
                 <fieldset class="form-section">
                     <legend>Skills</legend>
-                    <label for="input-skills">List your skills, separated by commas.</label>
-                    <input type="text" id="input-skills" name="skills" placeholder="e.g., Project Management, SEO, Python, Public Speaking">
+                    <label for="skill-input">Add your skills one by one</label>
+                    <div class="skill-input-container">
+                        <input type="text" id="skill-input" placeholder="e.g., JavaScript">
+                        <button type="button" id="add-skill">Add</button>
+                    </div>
+                    <div id="skills-tags-container" class="skills-tags"></div>
                 </fieldset>
         
                 <fieldset class="form-section">

@@ -74,24 +74,56 @@ document.addEventListener('DOMContentLoaded', function() {
     connectField('input-linkedin', 'preview-linkedin', 'linkedin.com/in/yourprofile');
     connectField('input-summary', 'preview-summary', 'A motivated and passionate professional with skills in...');
 
-    const skillsInput = document.getElementById('input-skills');
+    const skillInput = document.getElementById('skill-input');
+    const addSkillButton = document.getElementById('add-skill');
+    const skillsTagsContainer = document.getElementById('skills-tags-container');
     const skillsPreview = document.getElementById('preview-skills');
-    if(skillsInput && skillsPreview) {
-        skillsInput.addEventListener('input', function() {
-            const skillsArray = this.value.split(',').map(skill => skill.trim()).filter(skill => skill !== '');
-
-            if (skillsArray.length === 0) {
-                skillsPreview.innerHTML = '<li>Your skills will appear here.</li>';
-            } else {
-                skillsPreview.innerHTML = '';
-                skillsArray.forEach(skill => {
-                    const li = document.createElement('li');
-                    li.textContent = skill;
-                    skillsPreview.appendChild(li);
-                });
-            }
+    
+    let skillsArray = [];
+    
+    function addSkill() {
+        const skill = skillInput.value.trim();
+        if (skill && !skillsArray.includes(skill)) {
+            skillsArray.push(skill);
+            updateSkillsTags();
+            updateSkillsPreview();
+            skillInput.value = '';
+        }
+    }
+    
+    function removeSkill(skillToRemove) {
+        skillsArray = skillsArray.filter(skill => skill !== skillToRemove);
+        updateSkillsTags();
+        updateSkillsPreview();
+    }
+    
+    function updateSkillsTags() {
+        skillsTagsContainer.innerHTML = '';
+        skillsArray.forEach(skill => {
+            const tag = document.createElement('div');
+            tag.className = 'skill-tag';
+            tag.innerHTML = `
+                ${skill}
+                <button type="button" class="remove-skill">×</button>
+            `;
+            tag.querySelector('.remove-skill').addEventListener('click', () => removeSkill(skill));
+            skillsTagsContainer.appendChild(tag);
         });
     }
+    
+    function updateSkillsPreview() {
+        skillsPreview.innerHTML = '';
+        skillsArray.forEach(skill => {
+            const li = document.createElement('li');
+            li.textContent = skill;
+            skillsPreview.appendChild(li);
+        });
+    }
+    
+    addSkillButton.addEventListener('click', addSkill);
+    skillInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addSkill();
+    });
 
 
     const experienceContainer = document.getElementById('experience-container');
