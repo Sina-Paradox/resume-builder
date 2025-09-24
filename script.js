@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <input type="month" class="edu-start-date">
                     </div>
                     <div style="flex: 1;">
-                        <label>End Date (or Expected)</label>
+                        <label>End Date</label>
                         <input type="month" class="edu-end-date">
                     </div>
                 </div>
