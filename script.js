@@ -1,11 +1,59 @@
 document.addEventListener('DOMContentLoaded', function() {
-
+    
     const resumeForm = document.getElementById('resume-form');
     const resumeToExport = document.getElementById('resume-to-export');
     const downloadButton = document.getElementById('download-pdf');
     const templateButtons = document.querySelectorAll('.template-btn');
     const loadingOverlay = document.getElementById('loading-overlay');
     const dynamicStylesheet = document.getElementById('resume-template');
+
+    function initCustomDropdowns() {
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.custom-select')) {
+                document.querySelectorAll('.select-options').forEach(option => {
+                    option.classList.remove('open');
+                });
+            }
+        });
+        
+        initDropdownsForContainer(document.body);
+    }
+    
+    function initDropdownsForContainer(container) {
+        container.querySelectorAll('.select-trigger').forEach(trigger => {
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const optionsId = this.getAttribute('data-for');
+                const options = document.getElementById(optionsId);
+                const isOpen = options.classList.contains('open');
+                
+                document.querySelectorAll('.select-options').forEach(opt => {
+                    if (opt !== options) opt.classList.remove('open');
+                });
+                
+                options.classList.toggle('open', !isOpen);
+            });
+        });
+        
+        container.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                const text = this.textContent;
+                const options = this.parentElement;
+                const selectId = options.id;
+                const trigger = document.querySelector(`[data-for="${selectId}"]`);
+                const hiddenInput = trigger.parentElement.querySelector('input[type="hidden"]');
+                
+                trigger.querySelector('.select-value').textContent = text;
+                
+                hiddenInput.value = value;
+                
+                options.classList.remove('open');
+                
+                hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+            });
+        });
+    }
 
     function initializeResumeStructure() {
         resumeToExport.innerHTML = `
@@ -63,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     initializeResumeStructure();
+    initCustomDropdowns();
 
     function connectField(inputId, previewId, defaultValue, isHTML = false) {
         const inputElement = document.getElementById(inputId);
@@ -273,6 +322,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const experiencePreview = document.getElementById('preview-experience');
 
     function getExperienceFormHTML() {
+        const currentYear = new Date().getFullYear();
+        const years = Array.from({length: 50}, (_, i) => currentYear - i);
+        const months = [
+            {value: 1, name: 'January'}, {value: 2, name: 'February'}, {value: 3, name: 'March'},
+            {value: 4, name: 'April'}, {value: 5, name: 'May'}, {value: 6, name: 'June'},
+            {value: 7, name: 'July'}, {value: 8, name: 'August'}, {value: 9, name: 'September'},
+            {value: 10, name: 'October'}, {value: 11, name: 'November'}, {value: 12, name: 'December'}
+        ];
+        const days = Array.from({length: 31}, (_, i) => i + 1);
+        
         return `
             <div class="dynamic-item">
                 <button type="button" class="remove-btn">×</button>
@@ -286,14 +345,81 @@ document.addEventListener('DOMContentLoaded', function() {
                 <label>Location (City, Country)</label>
                 <input type="text" class="exp-location" placeholder="e.g., San Francisco, USA">
                 
-                <div style="display: flex; gap: 1rem;">
-                    <div style="flex: 1;">
-                        <label>Start Date</label>
-                        <input type="month" class="exp-start-date">
+                <!-- Start Date -->
+                <div class="date-row">
+                    <label>Start Date</label>
+                    <div class="custom-date-selector">
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="exp-start-year">
+                                <span class="select-value">Year</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="exp-start-year">
+                                ${years.map(year => `<div class="option" data-value="${year}">${year}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="exp-start-year" value="">
+                        </div>
+                        
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="exp-start-month">
+                                <span class="select-value">Month</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="exp-start-month">
+                                ${months.map(month => `<div class="option" data-value="${month.value}">${month.name}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="exp-start-month" value="">
+                        </div>
+                        
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="exp-start-day">
+                                <span class="select-value">Day</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="exp-start-day">
+                                ${days.map(day => `<div class="option" data-value="${day}">${day}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="exp-start-day" value="">
+                        </div>
                     </div>
-                    <div style="flex: 1;">
-                        <label>End Date</label>
-                        <input type="month" class="exp-end-date">
+                </div>
+                
+                <!-- End Date -->
+                <div class="date-row">
+                    <label>End Date</label>
+                    <div class="custom-date-selector">
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="exp-end-year">
+                                <span class="select-value">Year</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="exp-end-year">
+                                ${years.map(year => `<div class="option" data-value="${year}">${year}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="exp-end-year" value="">
+                        </div>
+                        
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="exp-end-month">
+                                <span class="select-value">Month</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="exp-end-month">
+                                ${months.map(month => `<div class="option" data-value="${month.value}">${month.name}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="exp-end-month" value="">
+                        </div>
+                        
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="exp-end-day">
+                                <span class="select-value">Day</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="exp-end-day">
+                                ${days.map(day => `<div class="option" data-value="${day}">${day}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="exp-end-day" value="">
+                        </div>
                     </div>
                 </div>
                 
@@ -304,14 +430,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getExperiencePreviewHTML(experience = {}) {
-        const { jobTitle = '', company = '', location = '', startDate = '', endDate = '', description = '' } = experience;
+        const { jobTitle = '', company = '', location = '', startMonth = '', startDay = '', startYear = '', endMonth = '', endDay = '', endYear = '', description = '' } = experience;
+        
         const descriptionPoints = description ? description.split('\n').filter(point => point.trim() !== '') : [];
         
         return `
             <div class="experience-item">
                 <div class="item-header">
                     <span>${jobTitle || 'Job Title'}</span>
-                    <span>${formatDateRange(startDate, endDate)}</span>
+                    <span>${formatDateRange(startYear, startMonth, startDay, endYear, endMonth, endDay)}</span>
                 </div>
                 <div class="item-subheader">
                     <span>${company || 'Company Name'}</span>
@@ -324,16 +451,17 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    function formatDateRange(startDate, endDate) {
-        if (!startDate) return '';
+    function formatDateRange(startYear, startMonth, startDay, endYear, endMonth, endDay) {
+        if (!startYear) return '';
         
-        const formatDate = (dateString) => {
-            if (!dateString) return 'Present';
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        const formatDate = (year, month, day) => {
+            if (!year) return 'Present';
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const monthName = month ? monthNames[month - 1] : '';
+            return monthName ? `${monthName} ${year}` : `${year}`;
         };
         
-        return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+        return `${formatDate(startYear, startMonth, startDay)} - ${formatDate(endYear, endMonth, endDay)}`;
     }
 
     function updateExperiencePreview() {
@@ -345,8 +473,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 jobTitle: form.querySelector('.exp-job-title').value,
                 company: form.querySelector('.exp-company').value,
                 location: form.querySelector('.exp-location').value,
-                startDate: form.querySelector('.exp-start-date').value,
-                endDate: form.querySelector('.exp-end-date').value,
+                startYear: form.querySelector('.exp-start-year').value,
+                startMonth: form.querySelector('.exp-start-month').value,
+                startDay: form.querySelector('.exp-start-day').value,
+                endYear: form.querySelector('.exp-end-year').value,
+                endMonth: form.querySelector('.exp-end-month').value,
+                endDay: form.querySelector('.exp-end-day').value,
                 description: form.querySelector('.exp-description').value
             });
         });
@@ -372,6 +504,8 @@ document.addEventListener('DOMContentLoaded', function() {
             updateExperiencePreview();
         });
         
+        initDropdownsForContainer(newForm);
+        
         const inputs = newForm.querySelectorAll('input, textarea');
         inputs.forEach(input => {
             input.addEventListener('input', updateExperiencePreview);
@@ -392,6 +526,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const educationPreview = document.getElementById('preview-education');
 
     function getEducationFormHTML() {
+        const currentYear = new Date().getFullYear();
+        const years = Array.from({length: 50}, (_, i) => currentYear - i);
+        const months = [
+            {value: 1, name: 'January'}, {value: 2, name: 'February'}, {value: 3, name: 'March'},
+            {value: 4, name: 'April'}, {value: 5, name: 'May'}, {value: 6, name: 'June'},
+            {value: 7, name: 'July'}, {value: 8, name: 'August'}, {value: 9, name: 'September'},
+            {value: 10, name: 'October'}, {value: 11, name: 'November'}, {value: 12, name: 'December'}
+        ];
+        const days = Array.from({length: 31}, (_, i) => i + 1);
+        
         return `
             <div class="dynamic-item">
                 <button type="button" class="remove-btn">×</button>
@@ -405,14 +549,81 @@ document.addEventListener('DOMContentLoaded', function() {
                 <label>Location (City, Country)</label>
                 <input type="text" class="edu-location" placeholder="e.g., New York, USA">
                 
-                <div style="display: flex; gap: 1rem;">
-                    <div style="flex: 1;">
-                        <label>Start Date</label>
-                        <input type="month" class="edu-start-date">
+                <!-- Start Date -->
+                <div class="date-row">
+                    <label>Start Date</label>
+                    <div class="custom-date-selector">
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="edu-start-year">
+                                <span class="select-value">Year</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="edu-start-year">
+                                ${years.map(year => `<div class="option" data-value="${year}">${year}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="edu-start-year" value="">
+                        </div>
+                        
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="edu-start-month">
+                                <span class="select-value">Month</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="edu-start-month">
+                                ${months.map(month => `<div class="option" data-value="${month.value}">${month.name}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="edu-start-month" value="">
+                        </div>
+                        
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="edu-start-day">
+                                <span class="select-value">Day</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="edu-start-day">
+                                ${days.map(day => `<div class="option" data-value="${day}">${day}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="edu-start-day" value="">
+                        </div>
                     </div>
-                    <div style="flex: 1;">
-                        <label>End Date</label>
-                        <input type="month" class="edu-end-date">
+                </div>
+                
+                <!-- End Date -->
+                <div class="date-row">
+                    <label>End Date (or Expected)</label>
+                    <div class="custom-date-selector">
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="edu-end-year">
+                                <span class="select-value">Year</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="edu-end-year">
+                                ${years.map(year => `<div class="option" data-value="${year}">${year}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="edu-end-year" value="">
+                        </div>
+                        
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="edu-end-month">
+                                <span class="select-value">Month</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="edu-end-month">
+                                ${months.map(month => `<div class="option" data-value="${month.value}">${month.name}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="edu-end-month" value="">
+                        </div>
+                        
+                        <div class="custom-select">
+                            <div class="select-trigger" data-for="edu-end-day">
+                                <span class="select-value">Day</span>
+                                <span class="arrow">▼</span>
+                            </div>
+                            <div class="select-options" id="edu-end-day">
+                                ${days.map(day => `<div class="option" data-value="${day}">${day}</div>`).join('')}
+                            </div>
+                            <input type="hidden" class="edu-end-day" value="">
+                        </div>
                     </div>
                 </div>
                 
@@ -423,14 +634,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getEducationPreviewHTML(education = {}) {
-        const { degree = '', institution = '', location = '', startDate = '', endDate = '', description = '' } = education;
+        const { degree = '', institution = '', location = '', startMonth = '', startDay = '', startYear = '', endMonth = '', endDay = '', endYear = '', description = '' } = education;
+        
         const descriptionPoints = description ? description.split('\n').filter(point => point.trim() !== '') : [];
         
         return `
             <div class="education-item">
                 <div class="item-header">
                     <span>${degree || 'Degree/Certification'}</span>
-                    <span>${formatDateRange(startDate, endDate)}</span>
+                    <span>${formatDateRange(startYear, startMonth, startDay, endYear, endMonth, endDay)}</span>
+                    
                 </div>
                 <div class="item-subheader">
                     <span>${institution || 'Institution Name'}</span>
@@ -454,8 +667,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 degree: form.querySelector('.edu-degree').value,
                 institution: form.querySelector('.edu-institution').value,
                 location: form.querySelector('.edu-location').value,
-                startDate: form.querySelector('.edu-start-date').value,
-                endDate: form.querySelector('.edu-end-date').value,
+                startYear: form.querySelector('.edu-start-year').value,
+                startMonth: form.querySelector('.edu-start-month').value,
+                startDay: form.querySelector('.edu-start-day').value,
+                endYear: form.querySelector('.edu-end-year').value,
+                endMonth: form.querySelector('.edu-end-month').value,
+                endDay: form.querySelector('.edu-end-day').value,
                 description: form.querySelector('.edu-description').value
             });
         });
@@ -480,6 +697,8 @@ document.addEventListener('DOMContentLoaded', function() {
             newForm.remove();
             updateEducationPreview();
         });
+        
+        initDropdownsForContainer(newForm);
         
         const inputs = newForm.querySelectorAll('input, textarea');
         inputs.forEach(input => {
