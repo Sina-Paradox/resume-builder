@@ -1,4 +1,184 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    const autocompleteDatasets = {
+        locations: [
+            "New York, USA", "London, UK", "Tokyo, Japan", "Paris, France", "Sydney, Australia",
+            "Toronto, Canada", "Berlin, Germany", "Singapore, Singapore", "Dubai, UAE", "Mumbai, India",
+            "San Francisco, USA", "Los Angeles, USA", "Chicago, USA", "Boston, USA", "Seattle, USA",
+            "Vancouver, Canada", "Melbourne, Australia", "Hong Kong, China", "Shanghai, China", "Beijing, China",
+            "Amsterdam, Netherlands", "Stockholm, Sweden", "Zurich, Switzerland", "Copenhagen, Denmark",
+            "Austin, USA", "Miami, USA", "Atlanta, USA", "Denver, USA", "Philadelphia, USA"
+        ],
+        
+        jobTitles: [
+            "Software Engineer", "Senior Software Engineer", "Frontend Developer", "Backend Developer",
+            "Full Stack Developer", "DevOps Engineer", "Data Scientist", "Machine Learning Engineer",
+            "Product Manager", "Project Manager", "UI/UX Designer", "Graphic Designer",
+            "Marketing Manager", "Sales Manager", "Business Analyst", "Data Analyst",
+            "System Administrator", "Network Engineer", "Cloud Architect", "IT Manager",
+            "Financial Analyst", "Accountant", "HR Manager", "Recruiter",
+            "Content Writer", "Digital Marketing Specialist", "SEO Specialist", "Social Media Manager"
+        ],
+        
+        degrees: [
+            "Bachelor of Science in Computer Science", "Bachelor of Arts in Business Administration",
+            "Master of Science in Data Science", "Master of Business Administration (MBA)",
+            "Bachelor of Engineering", "Bachelor of Fine Arts", "Bachelor of Architecture",
+            "Associate Degree in Information Technology", "Doctor of Philosophy (PhD) in Psychology",
+            "Bachelor of Science in Nursing", "Bachelor of Education", "Bachelor of Laws (LLB)",
+            "Master of Computer Science", "Master of Finance", "Master of Public Health",
+            "Certified Public Accountant (CPA)", "Project Management Professional (PMP)",
+            "Certified Information Systems Security Professional (CISSP)", "AWS Certified Solutions Architect"
+        ],
+        
+        hardSkills: [
+            "JavaScript", "Python", "Java", "C++", "C#", "Ruby", "PHP", "Swift", "Go", "Rust",
+            "React", "Angular", "Vue.js", "Node.js", "Django", "Spring Boot", "Laravel", "Flask",
+            "MySQL", "PostgreSQL", "MongoDB", "Redis", "Oracle", "SQL Server",
+            "AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Terraform",
+            "Git", "Jenkins", "CI/CD", "REST API", "GraphQL", "Microservices",
+            "Machine Learning", "Data Analysis", "Artificial Intelligence", "Blockchain"
+        ],
+        
+        softSkills: [
+            "Communication", "Leadership", "Teamwork", "Problem Solving", "Critical Thinking",
+            "Time Management", "Adaptability", "Creativity", "Work Ethic", "Attention to Detail",
+            "Conflict Resolution", "Emotional Intelligence", "Presentation Skills", "Negotiation",
+            "Collaboration", "Decision Making", "Strategic Planning", "Innovation", "Resilience"
+        ],
+        
+        languages: [
+            "English", "Spanish", "French", "German", "Chinese", "Japanese", "Korean", "Arabic",
+            "Portuguese", "Russian", "Italian", "Dutch", "Swedish", "Norwegian", "Danish",
+            "Hindi", "Bengali", "Turkish", "Polish", "Greek", "Hebrew", "Thai", "Vietnamese"
+        ]
+    };
+    
+    function initAutocomplete(inputElement, dataset, dropdownElement) {
+        let isMouseInDropdown = false;
+        
+        dropdownElement.addEventListener('mouseenter', () => {
+            isMouseInDropdown = true;
+        });
+        
+        dropdownElement.addEventListener('mouseleave', () => {
+            isMouseInDropdown = false;
+        });
+        
+        inputElement.addEventListener('input', function() {
+            const value = this.value.toLowerCase();
+            if (value.length < 2) {
+                dropdownElement.classList.remove('open');
+                return;
+            }
+            
+            const filtered = dataset.filter(item => 
+                item.toLowerCase().includes(value)
+            ).slice(0, 8);
+            
+            if (filtered.length > 0) {
+                dropdownElement.innerHTML = filtered.map(item => 
+                    `<div class="autocomplete-option">${item}</div>`
+                ).join('');
+                dropdownElement.classList.add('open');
+            } else {
+                dropdownElement.classList.remove('open');
+            }
+        });
+        
+        inputElement.addEventListener('focus', function() {
+            const value = this.value.toLowerCase();
+            if (value.length >= 2) {
+                const filtered = dataset.filter(item => 
+                    item.toLowerCase().includes(value)
+                ).slice(0, 8);
+                
+                if (filtered.length > 0) {
+                    dropdownElement.innerHTML = filtered.map(item => 
+                        `<div class="autocomplete-option">${item}</div>`
+                    ).join('');
+                    dropdownElement.classList.add('open');
+                }
+            }
+        });
+        
+        inputElement.addEventListener('blur', function() {
+            setTimeout(() => {
+                if (!isMouseInDropdown) {
+                    dropdownElement.classList.remove('open');
+                }
+            }, 200);
+        });
+        
+        dropdownElement.addEventListener('click', function(e) {
+            if (e.target.classList.contains('autocomplete-option')) {
+                inputElement.value = e.target.textContent;
+                dropdownElement.classList.remove('open');
+                inputElement.focus();
+            }
+        });
+        
+        inputElement.addEventListener('keydown', function(e) {
+            const options = dropdownElement.querySelectorAll('.autocomplete-option');
+            let activeOption = dropdownElement.querySelector('.autocomplete-option.active');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (!activeOption) {
+                    activeOption = options[0];
+                } else {
+                    const next = activeOption.nextElementSibling;
+                    activeOption = next || options[0];
+                }
+                options.forEach(opt => opt.classList.remove('active'));
+                if (activeOption) activeOption.classList.add('active');
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (!activeOption) {
+                    activeOption = options[options.length - 1];
+                } else {
+                    const prev = activeOption.previousElementSibling;
+                    activeOption = prev || options[options.length - 1];
+                }
+                options.forEach(opt => opt.classList.remove('active'));
+                if (activeOption) activeOption.classList.add('active');
+            } else if (e.key === 'Enter') {
+                if (activeOption) {
+                    e.preventDefault();
+                    inputElement.value = activeOption.textContent;
+                    dropdownElement.classList.remove('open');
+                }
+            } else if (e.key === 'Escape') {
+                dropdownElement.classList.remove('open');
+            }
+        });
+    }
+    
+    function initAllAutocompletes() {
+        initAutocomplete(
+            document.getElementById('input-location'),
+            autocompleteDatasets.locations,
+            document.getElementById('location-dropdown')
+        );
+        
+        initAutocomplete(
+            document.getElementById('hard-skill-input'),
+            autocompleteDatasets.hardSkills,
+            document.getElementById('hard-skills-dropdown')
+        );
+        
+        initAutocomplete(
+            document.getElementById('soft-skill-input'),
+            autocompleteDatasets.softSkills,
+            document.getElementById('soft-skills-dropdown')
+        );
+        
+        initAutocomplete(
+            document.getElementById('language-input'),
+            autocompleteDatasets.languages,
+            document.getElementById('languages-dropdown')
+        );
+    }
     
     const resumeForm = document.getElementById('resume-form');
     const resumeToExport = document.getElementById('resume-to-export');
@@ -337,13 +517,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button type="button" class="remove-btn">×</button>
                 
                 <label>Job Title</label>
-                <input type="text" class="exp-job-title" placeholder="e.g., Software Engineer">
+                <div class="autocomplete-wrapper">
+                    <input type="text" class="exp-job-title autocomplete-input" placeholder="e.g., Software Engineer">
+                    <div class="autocomplete-dropdown exp-job-title-dropdown"></div>
+                </div>
                 
                 <label>Company Name</label>
                 <input type="text" class="exp-company" placeholder="e.g., Tech Solutions Inc.">
                 
                 <label>Location (City, Country)</label>
-                <input type="text" class="exp-location" placeholder="e.g., San Francisco, USA">
+                <div class="autocomplete-wrapper">
+                    <input type="text" class="exp-location autocomplete-input" placeholder="e.g., San Francisco, USA">
+                    <div class="autocomplete-dropdown exp-location-dropdown"></div>
+                </div>
                 
                 <!-- Start Date -->
                 <div class="date-row">
@@ -506,6 +692,19 @@ document.addEventListener('DOMContentLoaded', function() {
         
         initDropdownsForContainer(newForm);
         
+        const jobTitleInput = newForm.querySelector('.exp-job-title');
+        const jobTitleDropdown = newForm.querySelector('.exp-job-title-dropdown');
+        const locationInput = newForm.querySelector('.exp-location');
+        const locationDropdown = newForm.querySelector('.exp-location-dropdown');
+        
+        if (jobTitleInput && jobTitleDropdown) {
+            initAutocomplete(jobTitleInput, autocompleteDatasets.jobTitles, jobTitleDropdown);
+        }
+        
+        if (locationInput && locationDropdown) {
+            initAutocomplete(locationInput, autocompleteDatasets.locations, locationDropdown);
+        }
+        
         const inputs = newForm.querySelectorAll('input, textarea');
         inputs.forEach(input => {
             input.addEventListener('input', updateExperiencePreview);
@@ -541,13 +740,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button type="button" class="remove-btn">×</button>
                 
                 <label>Degree or Certification</label>
-                <input type="text" class="edu-degree" placeholder="e.g., Bachelor of Science in Computer Science">
+                <div class="autocomplete-wrapper">
+                    <input type="text" class="edu-degree autocomplete-input" placeholder="e.g., Bachelor of Science in Computer Science">
+                    <div class="autocomplete-dropdown edu-degree-dropdown"></div>
+                </div>
                 
                 <label>Institution Name</label>
                 <input type="text" class="edu-institution" placeholder="e.g., University of Technology">
                 
                 <label>Location (City, Country)</label>
-                <input type="text" class="edu-location" placeholder="e.g., New York, USA">
+                <div class="autocomplete-wrapper">
+                    <input type="text" class="edu-location autocomplete-input" placeholder="e.g., New York, USA">
+                    <div class="autocomplete-dropdown edu-location-dropdown"></div>
+                </div>
                 
                 <!-- Start Date -->
                 <div class="date-row">
@@ -700,6 +905,19 @@ document.addEventListener('DOMContentLoaded', function() {
         
         initDropdownsForContainer(newForm);
         
+        const degreeInput = newForm.querySelector('.edu-degree');
+        const degreeDropdown = newForm.querySelector('.edu-degree-dropdown');
+        const locationInput = newForm.querySelector('.edu-location');
+        const locationDropdown = newForm.querySelector('.edu-location-dropdown');
+        
+        if (degreeInput && degreeDropdown) {
+            initAutocomplete(degreeInput, autocompleteDatasets.degrees, degreeDropdown);
+        }
+        
+        if (locationInput && locationDropdown) {
+            initAutocomplete(locationInput, autocompleteDatasets.locations, locationDropdown);
+        }
+        
         const inputs = newForm.querySelectorAll('input, textarea');
         inputs.forEach(input => {
             input.addEventListener('input', updateEducationPreview);
@@ -825,5 +1043,7 @@ document.addEventListener('DOMContentLoaded', function() {
             switchTemplate(templateName);
         });
     });
+
+    initAllAutocompletes();
 
 });

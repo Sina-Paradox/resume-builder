@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="templates/template-1.css" id="resume-template">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.01.min.css">
 </head>
 <body>
     <header class="app-header">
@@ -34,7 +36,10 @@
                     <input type="tel" id="input-phone" name="phone" placeholder="e.g., (555) 123-4567">
                     
                     <label for="input-location">Location (City, Country)</label>
-                    <input type="text" id="input-location" name="location" placeholder="e.g., Toronto, Canada">
+                    <div class="autocomplete-wrapper">
+                        <input type="text" id="input-location" name="location" placeholder="e.g., Toronto, Canada" class="autocomplete-input">
+                        <div class="autocomplete-dropdown" id="location-dropdown"></div>
+                    </div>
                     
                     <label for="input-linkedin">LinkedIn Profile URL</label>
                     <input type="url" id="input-linkedin" name="linkedin" placeholder="e.g., linkedin.com/in/janedoe">
@@ -50,7 +55,10 @@
                     <legend>Hard Skills (Technical)</legend>
                     <label for="hard-skill-input">Add technical skills like programming languages, tools, software</label>
                     <div class="skill-input-container">
-                        <input type="text" id="hard-skill-input" placeholder="e.g., JavaScript, Photoshop, Project Management">
+                        <div class="autocomplete-wrapper" style="flex: 2;">
+                            <input type="text" id="hard-skill-input" placeholder="e.g., JavaScript, Photoshop, Project Management" class="autocomplete-input">
+                            <div class="autocomplete-dropdown" id="hard-skills-dropdown"></div>
+                        </div>
                         <button type="button" id="add-hard-skill">Add</button>
                     </div>
                     <div id="hard-skills-tags-container" class="skills-tags"></div>
@@ -60,7 +68,10 @@
                     <legend>Soft Skills (Personal)</legend>
                     <label for="soft-skill-input">Add personal skills like communication, leadership, teamwork</label>
                     <div class="skill-input-container">
-                        <input type="text" id="soft-skill-input" placeholder="e.g., Communication, Leadership, Problem Solving">
+                        <div class="autocomplete-wrapper" style="flex: 2;">
+                            <input type="text" id="soft-skill-input" placeholder="e.g., Communication, Leadership, Problem Solving" class="autocomplete-input">
+                            <div class="autocomplete-dropdown" id="soft-skills-dropdown"></div>
+                        </div>
                         <button type="button" id="add-soft-skill">Add</button>
                     </div>
                     <div id="soft-skills-tags-container" class="skills-tags"></div>
@@ -70,7 +81,10 @@
                     <legend>Languages</legend>
                     <label for="language-input">Add languages you speak and proficiency level</label>
                     <div class="language-input-container">
-                        <input type="text" id="language-input" placeholder="e.g., English">
+                        <div class="autocomplete-wrapper" style="flex: 1;">
+                            <input type="text" id="language-input" placeholder="e.g., English" class="autocomplete-input">
+                            <div class="autocomplete-dropdown" id="languages-dropdown"></div>
+                        </div>
                         <select id="language-level">
                             <option value="Basic">Basic</option>
                             <option value="Intermediate">Intermediate</option>
