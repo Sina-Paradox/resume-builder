@@ -47,13 +47,39 @@
                 </fieldset>
         
                 <fieldset class="form-section">
-                    <legend>Skills</legend>
-                    <label for="skill-input">Add your skills one by one</label>
+                    <legend>Hard Skills (Technical)</legend>
+                    <label for="hard-skill-input">Add technical skills like programming languages, tools, software</label>
                     <div class="skill-input-container">
-                        <input type="text" id="skill-input" placeholder="e.g., JavaScript">
-                        <button type="button" id="add-skill">Add</button>
+                        <input type="text" id="hard-skill-input" placeholder="e.g., JavaScript, Photoshop, Project Management">
+                        <button type="button" id="add-hard-skill">Add</button>
                     </div>
-                    <div id="skills-tags-container" class="skills-tags"></div>
+                    <div id="hard-skills-tags-container" class="skills-tags"></div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Soft Skills (Personal)</legend>
+                    <label for="soft-skill-input">Add personal skills like communication, leadership, teamwork</label>
+                    <div class="skill-input-container">
+                        <input type="text" id="soft-skill-input" placeholder="e.g., Communication, Leadership, Problem Solving">
+                        <button type="button" id="add-soft-skill">Add</button>
+                    </div>
+                    <div id="soft-skills-tags-container" class="skills-tags"></div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Languages</legend>
+                    <label for="language-input">Add languages you speak and proficiency level</label>
+                    <div class="language-input-container">
+                        <input type="text" id="language-input" placeholder="e.g., English">
+                        <select id="language-level">
+                            <option value="Basic">Basic</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Native">Native</option>
+                        </select>
+                        <button type="button" id="add-language">Add</button>
+                    </div>
+                    <div id="languages-tags-container" class="skills-tags"></div>
                 </fieldset>
         
                 <fieldset class="form-section">

@@ -36,10 +36,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
 
+            <!-- HARD SKILLS SECTION -->
             <div class="resume-section">
-                <h2 class="section-title">Skills</h2>
-                <ul class="resume-list" id="preview-skills">
-                    <li>Your skills will appear here.</li>
+                <h2 class="section-title">Hard Skills</h2>
+                <ul class="resume-list" id="preview-hard-skills">
+                    <li>Your technical skills will appear here.</li>
+                </ul>
+            </div>
+
+            <!-- SOFT SKILLS SECTION -->
+            <div class="resume-section">
+                <h2 class="section-title">Soft Skills</h2>
+                <ul class="resume-list" id="preview-soft-skills">
+                    <li>Your personal skills will appear here.</li>
+                </ul>
+            </div>
+
+            <!-- LANGUAGES SECTION -->
+            <div class="resume-section">
+                <h2 class="section-title">Languages</h2>
+                <ul class="resume-list" id="preview-languages">
+                    <li>Your languages will appear here.</li>
                 </ul>
             </div>
         `;
@@ -74,55 +91,180 @@ document.addEventListener('DOMContentLoaded', function() {
     connectField('input-linkedin', 'preview-linkedin', 'linkedin.com/in/yourprofile');
     connectField('input-summary', 'preview-summary', 'A motivated and passionate professional with skills in...');
 
-    const skillInput = document.getElementById('skill-input');
-    const addSkillButton = document.getElementById('add-skill');
-    const skillsTagsContainer = document.getElementById('skills-tags-container');
-    const skillsPreview = document.getElementById('preview-skills');
+    const hardSkillInput = document.getElementById('hard-skill-input');
+    const addHardSkillButton = document.getElementById('add-hard-skill');
+    const hardSkillsTagsContainer = document.getElementById('hard-skills-tags-container');
+    const hardSkillsPreview = document.getElementById('preview-hard-skills');
     
-    let skillsArray = [];
+    let hardSkillsArray = [];
     
-    function addSkill() {
-        const skill = skillInput.value.trim();
-        if (skill && !skillsArray.includes(skill)) {
-            skillsArray.push(skill);
-            updateSkillsTags();
-            updateSkillsPreview();
-            skillInput.value = '';
+    function addHardSkill() {
+        const skill = hardSkillInput.value.trim();
+        if (skill && !hardSkillsArray.includes(skill)) {
+            hardSkillsArray.push(skill);
+            updateHardSkillsTags();
+            updateHardSkillsPreview();
+            hardSkillInput.value = '';
         }
     }
     
-    function removeSkill(skillToRemove) {
-        skillsArray = skillsArray.filter(skill => skill !== skillToRemove);
-        updateSkillsTags();
-        updateSkillsPreview();
+    function removeHardSkill(skillToRemove) {
+        hardSkillsArray = hardSkillsArray.filter(skill => skill !== skillToRemove);
+        updateHardSkillsTags();
+        updateHardSkillsPreview();
     }
     
-    function updateSkillsTags() {
-        skillsTagsContainer.innerHTML = '';
-        skillsArray.forEach(skill => {
+    function updateHardSkillsTags() {
+        hardSkillsTagsContainer.innerHTML = '';
+        hardSkillsArray.forEach(skill => {
             const tag = document.createElement('div');
             tag.className = 'skill-tag';
             tag.innerHTML = `
                 ${skill}
                 <button type="button" class="remove-skill">×</button>
             `;
-            tag.querySelector('.remove-skill').addEventListener('click', () => removeSkill(skill));
-            skillsTagsContainer.appendChild(tag);
+            tag.querySelector('.remove-skill').addEventListener('click', () => removeHardSkill(skill));
+            hardSkillsTagsContainer.appendChild(tag);
         });
     }
     
-    function updateSkillsPreview() {
-        skillsPreview.innerHTML = '';
-        skillsArray.forEach(skill => {
-            const li = document.createElement('li');
-            li.textContent = skill;
-            skillsPreview.appendChild(li);
+    function updateHardSkillsPreview() {
+        const hardSkillsSection = document.querySelector('.resume-section:nth-child(5)');
+        
+        hardSkillsPreview.innerHTML = '';
+        if (hardSkillsArray.length === 0) {
+            hardSkillsSection.style.display = 'none';
+        } else {
+            hardSkillsSection.style.display = 'block';
+            hardSkillsArray.forEach(skill => {
+                const li = document.createElement('li');
+                li.textContent = skill;
+                hardSkillsPreview.appendChild(li);
+            });
+        }
+    }
+    
+    addHardSkillButton.addEventListener('click', addHardSkill);
+    hardSkillInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addHardSkill();
+    });
+
+    const softSkillInput = document.getElementById('soft-skill-input');
+    const addSoftSkillButton = document.getElementById('add-soft-skill');
+    const softSkillsTagsContainer = document.getElementById('soft-skills-tags-container');
+    const softSkillsPreview = document.getElementById('preview-soft-skills');
+    
+    let softSkillsArray = [];
+    
+    function addSoftSkill() {
+        const skill = softSkillInput.value.trim();
+        if (skill && !softSkillsArray.includes(skill)) {
+            softSkillsArray.push(skill);
+            updateSoftSkillsTags();
+            updateSoftSkillsPreview();
+            softSkillInput.value = '';
+        }
+    }
+    
+    function removeSoftSkill(skillToRemove) {
+        softSkillsArray = softSkillsArray.filter(skill => skill !== skillToRemove);
+        updateSoftSkillsTags();
+        updateSoftSkillsPreview();
+    }
+    
+    function updateSoftSkillsTags() {
+        softSkillsTagsContainer.innerHTML = '';
+        softSkillsArray.forEach(skill => {
+            const tag = document.createElement('div');
+            tag.className = 'skill-tag';
+            tag.innerHTML = `
+                ${skill}
+                <button type="button" class="remove-skill">×</button>
+            `;
+            tag.querySelector('.remove-skill').addEventListener('click', () => removeSoftSkill(skill));
+            softSkillsTagsContainer.appendChild(tag);
         });
     }
     
-    addSkillButton.addEventListener('click', addSkill);
-    skillInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') addSkill();
+    function updateSoftSkillsPreview() {
+        const softSkillsSection = document.querySelector('.resume-section:nth-child(6)');
+        
+        softSkillsPreview.innerHTML = '';
+        if (softSkillsArray.length === 0) {
+            softSkillsSection.style.display = 'none';
+        } else {
+            softSkillsSection.style.display = 'block';
+            softSkillsArray.forEach(skill => {
+                const li = document.createElement('li');
+                li.textContent = skill;
+                softSkillsPreview.appendChild(li);
+            });
+        }
+    }
+    
+    addSoftSkillButton.addEventListener('click', addSoftSkill);
+    softSkillInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addSoftSkill();
+    });
+
+    const languageInput = document.getElementById('language-input');
+    const languageLevel = document.getElementById('language-level');
+    const addLanguageButton = document.getElementById('add-language');
+    const languagesTagsContainer = document.getElementById('languages-tags-container');
+    const languagesPreview = document.getElementById('preview-languages');
+    
+    let languagesArray = [];
+    
+    function addLanguage() {
+        const language = languageInput.value.trim();
+        const level = languageLevel.value;
+        if (language) {
+            languagesArray.push({ language, level });
+            updateLanguagesTags();
+            updateLanguagesPreview();
+            languageInput.value = '';
+        }
+    }
+    
+    function removeLanguage(languageToRemove) {
+        languagesArray = languagesArray.filter(item => item.language !== languageToRemove);
+        updateLanguagesTags();
+        updateLanguagesPreview();
+    }
+    
+    function updateLanguagesTags() {
+        languagesTagsContainer.innerHTML = '';
+        languagesArray.forEach(item => {
+            const tag = document.createElement('div');
+            tag.className = 'language-tag';
+            tag.innerHTML = `
+                ${item.language} (${item.level})
+                <button type="button" class="remove-skill">×</button>
+            `;
+            tag.querySelector('.remove-skill').addEventListener('click', () => removeLanguage(item.language));
+            languagesTagsContainer.appendChild(tag);
+        });
+    }
+    
+    function updateLanguagesPreview() {
+        const languagesSection = document.querySelector('.resume-section:nth-child(7)');
+        
+        languagesPreview.innerHTML = '';
+        if (languagesArray.length === 0) {
+            languagesSection.style.display = 'none';
+        } else {
+            languagesSection.style.display = 'block';
+            languagesArray.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.language} - ${item.level}`;
+                languagesPreview.appendChild(li);
+            });
+        }
+    }
+    
+    addLanguageButton.addEventListener('click', addLanguage);
+    languageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addLanguage();
     });
 
 
