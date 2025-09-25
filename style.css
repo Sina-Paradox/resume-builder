@@ -153,6 +153,48 @@ body {
     box-sizing: inherit;
 }
 
+#resume-to-export .resume-header h1,
+#resume-to-export .resume-header p,
+#resume-to-export .section-title,
+#resume-to-export .item-header span:first-child,
+#resume-to-export .item-subheader span:first-child {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+#resume-to-export .resume-list li {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    margin-bottom: 0.25rem;
+}
+
+#resume-to-export .item-header,
+#resume-to-export .item-subheader {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+#resume-to-export .item-header span:last-child,
+#resume-to-export .item-subheader span:last-child {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+#resume-to-export .item-header span:first-child,
+#resume-to-export .item-subheader span:first-child {
+    flex: 1;
+    min-width: 0;
+}
+
+#resume-to-export .resume-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
 #loading-overlay {
     position: fixed;
     top: 0;
@@ -257,6 +299,11 @@ body {
     font-size: 1rem;
 }
 
+#resume-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
 #resume-form input:focus,
 #resume-form textarea:focus {
     outline: none;
@@ -354,6 +401,12 @@ body {
     }
     #resume-to-export, #resume-to-export * {
         visibility: visible;
+    }
+    #resume-to-export .resume-list li {
+        margin-bottom: 0.2rem;
+    }
+    #resume-to-export .resume-section {
+        margin-bottom: 1rem;
     }
     #resume-to-export {
         position: absolute;
