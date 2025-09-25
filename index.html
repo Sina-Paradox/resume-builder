@@ -44,6 +44,12 @@
                     <label for="input-linkedin">LinkedIn Profile URL</label>
                     <input type="url" id="input-linkedin" name="linkedin" placeholder="e.g., linkedin.com/in/janedoe">
                 </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>Profile Photo</legend>
+                    <button type="button" id="upload-photo-btn" class="upload-btn">Upload Photo (JPG)</button>
+                    <input type="file" id="photo-file-input" accept=".jpg,.jpeg" style="display: none;">
+                </fieldset>
         
                 <fieldset class="form-section">
                     <legend>Professional Summary</legend>
@@ -142,6 +148,27 @@
     <div id="loading-overlay" class="loading-hidden">
         <div class="loading-spinner"></div>
         <p>Loading Template...</p>
+    </div>
+
+    <div id="photo-crop-modal" class="crop-modal-hidden">
+        <div class="crop-modal-content">
+            <div class="crop-modal-header">
+                <h3>Crop Your Photo</h3>
+                <button id="close-crop-modal">×</button>
+            </div>
+            <div class="crop-container">
+                <div class="crop-area">
+                    <img id="crop-image-preview" style="max-width: 100%;">
+                    <div class="crop-frame"></div>
+                </div>
+                <div class="crop-controls">
+                    <button id="zoom-out">−</button>
+                    <span id="zoom-level">100%</span>
+                    <button id="zoom-in">+</button>
+                    <button id="crop-confirm" class="confirm-btn">Confirm Crop</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>

@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    let currentImage = null;
+    let imageScale = 1;
+    let imageX = 0;
+    let imageY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
     const autocompleteDatasets = {
         locations: [
             "New York, USA", "London, UK", "Tokyo, Japan", "Paris, France", "Sydney, Australia",
@@ -180,6 +188,138 @@ document.addEventListener('DOMContentLoaded', function() {
         );
     }
     
+    const uploadPhotoBtn = document.getElementById('upload-photo-btn');
+    const photoFileInput = document.getElementById('photo-file-input');
+    const photoCropModal = document.getElementById('photo-crop-modal');
+    const closeCropModal = document.getElementById('close-crop-modal');
+    const cropImagePreview = document.getElementById('crop-image-preview');
+    const zoomInBtn = document.getElementById('zoom-in');
+    const zoomOutBtn = document.getElementById('zoom-out');
+    const zoomLevel = document.getElementById('zoom-level');
+    const cropConfirmBtn = document.getElementById('crop-confirm');
+
+    uploadPhotoBtn.addEventListener('click', () => {
+        photoFileInput.click();
+    });
+
+    photoFileInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    openCropModal(e.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a JPG file.');
+            }
+        }
+    });
+
+    function openCropModal(imageSrc) {
+        currentImage = new Image();
+        currentImage.onload = function() {
+            cropImagePreview.src = imageSrc;
+            imageScale = 1;
+            imageX = 0;
+            imageY = 0;
+            updateImageTransform();
+            photoCropModal.classList.remove('crop-modal-hidden');
+        };
+        currentImage.src = imageSrc;
+    }
+
+    closeCropModal.addEventListener('click', () => {
+        photoCropModal.classList.add('crop-modal-hidden');
+        photoFileInput.value = '';
+    });
+
+    cropImagePreview.addEventListener('mousedown', startDrag);
+    cropImagePreview.addEventListener('touchstart', startDrag);
+
+    function startDrag(e) {
+        e.preventDefault();
+        isDragging = true;
+        startX = e.clientX || e.touches[0].clientX;
+        startY = e.clientY || e.touches[0].clientY;
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+    }
+
+    function drag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const currentX = e.clientX || e.touches[0].clientX;
+        const currentY = e.clientY || e.touches[0].clientY;
+        imageX += (currentX - startX) / imageScale;
+        imageY += (currentY - startY) / imageScale;
+        startX = currentX;
+        startY = currentY;
+        updateImageTransform();
+    }
+
+    function stopDrag() {
+        isDragging = false;
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('touchmove', drag);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchend', stopDrag);
+    }
+
+    zoomInBtn.addEventListener('click', () => {
+        imageScale = Math.min(imageScale + 0.1, 3);
+        updateImageTransform();
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+        imageScale = Math.max(imageScale - 0.1, 0.5);
+        updateImageTransform();
+    });
+
+    function updateImageTransform() {
+        cropImagePreview.style.transform = `translate(-50%, -50%) scale(${imageScale}) translate(${imageX}px, ${imageY}px)`;
+        zoomLevel.textContent = Math.round(imageScale * 100) + '%';
+    }
+
+    cropConfirmBtn.addEventListener('click', () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 150;
+        canvas.height = 180;
+        
+        const cropX = (cropImagePreview.width / 2) + imageX - (75 / imageScale);
+        const cropY = (cropImagePreview.height / 2) + imageY - (90 / imageScale);
+        const cropWidth = 150 / imageScale;
+        const cropHeight = 180 / imageScale;
+        
+        ctx.drawImage(
+            currentImage,
+            cropX, cropY, cropWidth, cropHeight,
+            0, 0, 150, 180
+        );
+        
+        const croppedImageUrl = canvas.toDataURL('image/jpeg', 0.9);
+        updateResumePhoto(croppedImageUrl);
+        photoCropModal.classList.add('crop-modal-hidden');
+        photoFileInput.value = '';
+    });
+
+    function updateResumePhoto(imageUrl) {
+        let photoImg = document.getElementById('resume-photo');
+        if (!photoImg) {
+            const resumeHeader = document.querySelector('.resume-header');
+            photoImg = document.createElement('img');
+            photoImg.id = 'resume-photo';
+            photoImg.className = 'resume-photo';
+            resumeHeader.insertBefore(photoImg, resumeHeader.firstChild);
+        }
+        photoImg.src = imageUrl;
+        photoImg.style.display = 'block';
+    }
+
     const resumeForm = document.getElementById('resume-form');
     const resumeToExport = document.getElementById('resume-to-export');
     const downloadButton = document.getElementById('download-pdf');
@@ -238,49 +378,47 @@ document.addEventListener('DOMContentLoaded', function() {
     function initializeResumeStructure() {
         resumeToExport.innerHTML = `
             <div class="resume-header">
+                <img id="resume-photo" class="resume-photo" src="" style="display: none;">
                 <h1 class="resume-name" id="preview-name">Your Full Name</h1>
                 <p class="resume-contact" id="preview-email">email@example.com</p>
                 <p class="resume-contact" id="preview-phone">(123) 456-7890</p>
                 <p class="resume-contact" id="preview-location">City, Country</p>
                 <p class="resume-contact" id="preview-linkedin">linkedin.com/in/yourprofile</p>
             </div>
-
+    
             <div class="resume-section">
                 <h2 class="section-title">Professional Summary</h2>
                 <p id="preview-summary">A motivated and passionate professional with skills in...</p>
             </div>
-
+    
             <div class="resume-section">
                 <h2 class="section-title">Work Experience</h2>
                 <div id="preview-experience">
                     <p>Your work experience will appear here.</p>
                 </div>
             </div>
-
+    
             <div class="resume-section">
                 <h2 class="section-title">Education</h2>
                 <div id="preview-education">
                     <p>Your education history will appear here.</p>
                 </div>
             </div>
-
-            <!-- HARD SKILLS SECTION -->
+    
             <div class="resume-section">
                 <h2 class="section-title">Hard Skills</h2>
                 <ul class="resume-list" id="preview-hard-skills">
                     <li>Your technical skills will appear here.</li>
                 </ul>
             </div>
-
-            <!-- SOFT SKILLS SECTION -->
+    
             <div class="resume-section">
                 <h2 class="section-title">Soft Skills</h2>
                 <ul class="resume-list" id="preview-soft-skills">
                     <li>Your personal skills will appear here.</li>
                 </ul>
             </div>
-
-            <!-- LANGUAGES SECTION -->
+    
             <div class="resume-section">
                 <h2 class="section-title">Languages</h2>
                 <ul class="resume-list" id="preview-languages">
