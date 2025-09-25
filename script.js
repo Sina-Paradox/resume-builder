@@ -290,14 +290,24 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.width = 150;
         canvas.height = 180;
         
-        const cropX = (cropImagePreview.width / 2) + imageX - (75 / imageScale);
-        const cropY = (cropImagePreview.height / 2) + imageY - (90 / imageScale);
-        const cropWidth = 150 / imageScale;
-        const cropHeight = 180 / imageScale;
+        const cropArea = document.querySelector('.crop-area');
+        const cropFrame = document.querySelector('.crop-frame');
+        
+        const cropAreaRect = cropArea.getBoundingClientRect();
+        const cropFrameRect = cropFrame.getBoundingClientRect();
+        const imageRect = cropImagePreview.getBoundingClientRect();
+        
+        const scaleX = currentImage.naturalWidth / imageRect.width;
+        const scaleY = currentImage.naturalHeight / imageRect.height;
+        
+        const frameLeftRelative = (cropFrameRect.left - imageRect.left) * scaleX;
+        const frameTopRelative = (cropFrameRect.top - imageRect.top) * scaleY;
+        const frameWidthRelative = cropFrameRect.width * scaleX;
+        const frameHeightRelative = cropFrameRect.height * scaleY;
         
         ctx.drawImage(
             currentImage,
-            cropX, cropY, cropWidth, cropHeight,
+            frameLeftRelative, frameTopRelative, frameWidthRelative, frameHeightRelative,
             0, 0, 150, 180
         );
         
