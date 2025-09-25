@@ -510,7 +510,6 @@ document.addEventListener('DOMContentLoaded', function() {
             {value: 7, name: 'July'}, {value: 8, name: 'August'}, {value: 9, name: 'September'},
             {value: 10, name: 'October'}, {value: 11, name: 'November'}, {value: 12, name: 'December'}
         ];
-        const days = Array.from({length: 31}, (_, i) => i + 1);
         
         return `
             <div class="dynamic-item">
@@ -556,17 +555,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <input type="hidden" class="exp-start-month" value="">
                         </div>
-                        
-                        <div class="custom-select">
-                            <div class="select-trigger" data-for="exp-start-day">
-                                <span class="select-value">Day</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="select-options" id="exp-start-day">
-                                ${days.map(day => `<div class="option" data-value="${day}">${day}</div>`).join('')}
-                            </div>
-                            <input type="hidden" class="exp-start-day" value="">
-                        </div>
                     </div>
                 </div>
                 
@@ -595,17 +583,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <input type="hidden" class="exp-end-month" value="">
                         </div>
-                        
-                        <div class="custom-select">
-                            <div class="select-trigger" data-for="exp-end-day">
-                                <span class="select-value">Day</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="select-options" id="exp-end-day">
-                                ${days.map(day => `<div class="option" data-value="${day}">${day}</div>`).join('')}
-                            </div>
-                            <input type="hidden" class="exp-end-day" value="">
-                        </div>
                     </div>
                 </div>
                 
@@ -616,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getExperiencePreviewHTML(experience = {}) {
-        const { jobTitle = '', company = '', location = '', startMonth = '', startDay = '', startYear = '', endMonth = '', endDay = '', endYear = '', description = '' } = experience;
+        const { jobTitle = '', company = '', location = '', startMonth = '', startYear = '', endMonth = '', endYear = '', description = '' } = experience;
         
         const descriptionPoints = description ? description.split('\n').filter(point => point.trim() !== '') : [];
         
@@ -624,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="experience-item">
                 <div class="item-header">
                     <span>${jobTitle || 'Job Title'}</span>
-                    <span>${formatDateRange(startYear, startMonth, startDay, endYear, endMonth, endDay)}</span>
+                    <span>${formatDateRange(startYear, startMonth, endYear, endMonth)}</span>
                 </div>
                 <div class="item-subheader">
                     <span>${company || 'Company Name'}</span>
@@ -637,17 +614,17 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    function formatDateRange(startYear, startMonth, startDay, endYear, endMonth, endDay) {
+    function formatDateRange(startYear, startMonth, endYear, endMonth) {
         if (!startYear) return '';
         
-        const formatDate = (year, month, day) => {
+        const formatDate = (year, month) => {
             if (!year) return 'Present';
             const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             const monthName = month ? monthNames[month - 1] : '';
             return monthName ? `${monthName} ${year}` : `${year}`;
         };
         
-        return `${formatDate(startYear, startMonth, startDay)} - ${formatDate(endYear, endMonth, endDay)}`;
+        return `${formatDate(startYear, startMonth)} - ${formatDate(endYear, endMonth)}`;
     }
 
     function updateExperiencePreview() {
@@ -661,10 +638,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 location: form.querySelector('.exp-location').value,
                 startYear: form.querySelector('.exp-start-year').value,
                 startMonth: form.querySelector('.exp-start-month').value,
-                startDay: form.querySelector('.exp-start-day').value,
                 endYear: form.querySelector('.exp-end-year').value,
                 endMonth: form.querySelector('.exp-end-month').value,
-                endDay: form.querySelector('.exp-end-day').value,
                 description: form.querySelector('.exp-description').value
             });
         });
@@ -733,7 +708,6 @@ document.addEventListener('DOMContentLoaded', function() {
             {value: 7, name: 'July'}, {value: 8, name: 'August'}, {value: 9, name: 'September'},
             {value: 10, name: 'October'}, {value: 11, name: 'November'}, {value: 12, name: 'December'}
         ];
-        const days = Array.from({length: 31}, (_, i) => i + 1);
         
         return `
             <div class="dynamic-item">
@@ -779,17 +753,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <input type="hidden" class="edu-start-month" value="">
                         </div>
-                        
-                        <div class="custom-select">
-                            <div class="select-trigger" data-for="edu-start-day">
-                                <span class="select-value">Day</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="select-options" id="edu-start-day">
-                                ${days.map(day => `<div class="option" data-value="${day}">${day}</div>`).join('')}
-                            </div>
-                            <input type="hidden" class="edu-start-day" value="">
-                        </div>
                     </div>
                 </div>
                 
@@ -818,17 +781,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                             <input type="hidden" class="edu-end-month" value="">
                         </div>
-                        
-                        <div class="custom-select">
-                            <div class="select-trigger" data-for="edu-end-day">
-                                <span class="select-value">Day</span>
-                                <span class="arrow">▼</span>
-                            </div>
-                            <div class="select-options" id="edu-end-day">
-                                ${days.map(day => `<div class="option" data-value="${day}">${day}</div>`).join('')}
-                            </div>
-                            <input type="hidden" class="edu-end-day" value="">
-                        </div>
                     </div>
                 </div>
                 
@@ -839,7 +791,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getEducationPreviewHTML(education = {}) {
-        const { degree = '', institution = '', location = '', startMonth = '', startDay = '', startYear = '', endMonth = '', endDay = '', endYear = '', description = '' } = education;
+        const { degree = '', institution = '', location = '', startMonth = '', startYear = '', endMonth = '', endYear = '', description = '' } = education;
         
         const descriptionPoints = description ? description.split('\n').filter(point => point.trim() !== '') : [];
         
@@ -847,7 +799,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="education-item">
                 <div class="item-header">
                     <span>${degree || 'Degree/Certification'}</span>
-                    <span>${formatDateRange(startYear, startMonth, startDay, endYear, endMonth, endDay)}</span>
+                    <span>${formatDateRange(startYear, startMonth, endYear, endMonth)}</span>
                     
                 </div>
                 <div class="item-subheader">
@@ -874,10 +826,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 location: form.querySelector('.edu-location').value,
                 startYear: form.querySelector('.edu-start-year').value,
                 startMonth: form.querySelector('.edu-start-month').value,
-                startDay: form.querySelector('.edu-start-day').value,
                 endYear: form.querySelector('.edu-end-year').value,
                 endMonth: form.querySelector('.edu-end-month').value,
-                endDay: form.querySelector('.edu-end-day').value,
                 description: form.querySelector('.edu-description').value
             });
         });

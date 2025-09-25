@@ -465,6 +465,14 @@ body {
     min-width: 0;
 }
 
+.custom-select:first-child {
+    flex: 1;
+}
+
+.custom-select:last-child {
+    flex: 1.5;
+}
+
 .select-trigger {
     display: flex;
     justify-content: space-between;
@@ -534,18 +542,6 @@ body {
 .select-options::-webkit-scrollbar-thumb {
     background: var(--color-primary);
     border-radius: 3px;
-}
-
-.custom-select:first-child {
-    flex: 1.2;
-}
-
-.custom-select:nth-child(2) {
-    flex: 1.5;
-}
-
-.custom-select:last-child {
-    flex: 0.8;
 }
 
 .autocomplete-wrapper {
