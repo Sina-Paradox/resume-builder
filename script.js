@@ -1038,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalText = downloadButton.textContent;
         downloadButton.textContent = 'Generating PDF...';
         downloadButton.disabled = true;
-
+    
         const element = document.getElementById('resume-to-export');
         
         const opt = {
@@ -1057,7 +1057,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 orientation: 'portrait'
             }
         };
-
+    
         html2pdf()
             .set(opt)
             .from(element)

@@ -138,6 +138,21 @@ body {
     overflow-y: auto;
 }
 
+.page-break-avoid {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+.page-break-before {
+    page-break-before: always;
+    break-before: page;
+}
+
+.page-break-after {
+    page-break-after: always;
+    break-after: page;
+}
+
 #resume-to-export {
     width: 210mm;
     min-height: 297mm;
@@ -417,6 +432,14 @@ body {
         margin: 0;
         padding: 15mm;
         box-shadow: none;
+    }
+    .resume-page {
+        box-shadow: none;
+        margin: 0;
+        page-break-after: always;
+    }
+    .page-break-indicator {
+        display: none;
     }
 }
 
