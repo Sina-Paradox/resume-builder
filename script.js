@@ -466,7 +466,19 @@ document.addEventListener('DOMContentLoaded', function() {
     connectField('input-phone', 'preview-phone', '(123) 456-7890');
     connectField('input-location', 'preview-location', 'City, Country');
     connectField('input-linkedin', 'preview-linkedin', 'linkedin.com/in/yourprofile');
-    connectField('input-summary', 'preview-summary', 'A motivated and passionate professional with skills in...');
+
+    const summaryInput = document.getElementById('input-summary');
+    const summaryPreview = document.getElementById('preview-summary');
+
+    if (summaryInput && summaryPreview) {
+        summaryInput.addEventListener('input', function() {
+            if (this.value.trim() === '') {
+                summaryPreview.textContent = 'A motivated and passionate professional with skills in...';
+            } else {
+                summaryPreview.innerHTML = this.value.replace(/\n/g, '<br>');
+            }
+        });
+    }
 
     const hardSkillInput = document.getElementById('hard-skill-input');
     const addHardSkillButton = document.getElementById('add-hard-skill');
