@@ -42,6 +42,31 @@ body {
     margin: 0 auto;
 }
 
+.app-header a {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.app-header a:hover {
+    text-decoration: none;
+}
+
+.app-header a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 50%;
+    background-color: #2563eb;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.app-header a:hover::after {
+    width: 100%;
+}
+
 .app-container {
     display: flex;
     gap: 2rem;
@@ -840,4 +865,16 @@ body {
     margin: 0 auto 1rem auto;
     display: block;
     border: 1px solid #d1d5db;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+footer p {
+    color: #6b7280;
+    font-size: 0.9rem;
 }
